@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Check Attendance - Employee Workspace</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
+    <script src="{% static 'datetimepicker.js' %}"></script>
+    <script>
+        function validate(formObj) {
+            if (!formObj.t1.value.trim()) {
+                alert("Please Choose From Date");
+                formObj.t1.focus();
+                return false;
+            }
+            if (!formObj.t2.value.trim()) {
+                alert("Please Choose To Date");
+                formObj.t2.focus();
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+<div id="wrapper">
+    <!-- Header -->
+    <div id="header">
+        <div id="logo">
+            <div id="logo-icon">
+                <i class="fa-solid fa-clipboard-user"></i>
+            </div>
+            <div>
+                <h1>Employee Attendance System</h1>
+                <p>Personal Attendance History</p>
+            </div>
+        </div>
+        <div class="system-status">
+            <span class="pulse-dot"></span>
+            User Active
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div id="menu">
+        <ul>
+            <li><a href="{% url 'FaceAttendance' %}"><i class="fa-solid fa-camera"></i> Face Attendance</a></li>
+            <li><a href="{% url 'ViewAttendance' %}" class="active"><i class="fa-solid fa-clipboard-check"></i> Check Attendance</a></li>
+            <li><a href="{% url 'index' %}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Panel -->
+    <div class="content-panel">
+        <div class="form-card" style="max-width: 580px;">
+            <h2><i class="fa-solid fa-calendar-days"></i> Check Attendance Record</h2>
+
+            {% if data %}
+            <div class="alert-box">
+                <i class="fa-solid fa-circle-info"></i> {{ data }}
+            </div>
+            {% endif %}
+
+            <form name="f1" method="post" action="{% url 'ViewAttendanceAction' %}" onsubmit="return validate(this);">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="demo"><i class="fa-solid fa-calendar-day"></i> From Date</label>
+                    <div class="datepicker-group">
+                        <div class="input-wrapper" style="flex: 1;">
+                            <i class="fa-solid fa-calendar-day"></i>
+                            <input name="t1" type="text" id="demo" maxlength="25" placeholder="Select start date" autocomplete="off" />
+                        </div>
+                        <a href="javascript:NewCal('demo','ddmmmyyyy',false,24)" class="cal-btn" title="Pick From Date">
+                            <i class="fa-solid fa-calendar-plus"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="demo1"><i class="fa-solid fa-calendar-check"></i> To Date</label>
+                    <div class="datepicker-group">
+                        <div class="input-wrapper" style="flex: 1;">
+                            <i class="fa-solid fa-calendar-day"></i>
+                            <input name="t2" type="text" id="demo1" maxlength="25" placeholder="Select end date" autocomplete="off" />
+                        </div>
+                        <a href="javascript:NewCal('demo1','ddmmmyyyy',false,24)" class="cal-btn" title="Pick To Date">
+                            <i class="fa-solid fa-calendar-plus"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fa-solid fa-list-check"></i> Fetch My Attendance Report
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer">
+        <p>&copy; Employee Attendance System | Employee Portal</p>
+    </div>
+</div>
+</body>
+</html>

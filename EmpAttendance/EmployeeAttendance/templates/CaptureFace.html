@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Capture Face Data - Biometric Registration</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
+    <script src="{% static 'webcam.min.js' %}"></script>
+    <script>
+        function take_snapshot() {
+            Webcam.snap(function(data_uri) {
+                document.getElementById('results').innerHTML = 
+                    '<h3><i class="fa-solid fa-camera"></i> Snapshot Captured</h3>' + 
+                    '<img src="'+data_uri+'" alt="Captured Face"/>';
+                    
+                var request = new XMLHttpRequest();
+                request.open("GET", "http://127.0.0.1:8000/WebCam?mytext=" + encodeURIComponent(data_uri));
+                request.onreadystatechange = function() {
+                    if (this.readyState === 4 && this.status === 200) {
+                        document.getElementById("sr").innerHTML = '<i class="fa-solid fa-circle-check"></i> ' + this.responseText;
+                    }
+                };
+                request.send();
+            });
+        }
+    </script>
+</head>
+<body>
+<div id="wrapper">
+    <!-- Header -->
+    <div id="header">
+        <div id="logo">
+            <div id="logo-icon">
+                <i class="fa-solid fa-face-smile-beam"></i>
+            </div>
+            <div>
+                <h1>Employee Attendance System</h1>
+                <p>Biometric Face Encoding</p>
+            </div>
+        </div>
+        <div class="system-status">
+            <span class="pulse-dot"></span>
+            Camera Ready
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div id="menu">
+        <ul>
+            <li><a href="{% url 'AddEmp' %}"><i class="fa-solid fa-user-plus"></i> Create Employee Data</a></li>
+            <li><a href="{% url 'ViewEmp' %}"><i class="fa-solid fa-users"></i> View Employee Data</a></li>
+            <li><a href="{% url 'ViewEmpAttendance' %}"><i class="fa-solid fa-calendar-check"></i> View Employee Attendance</a></li>
+            <li><a href="{% url 'index' %}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Panel -->
+    <div class="content-panel">
+        <div class="form-card" style="max-width: 850px;">
+            <h2><i class="fa-solid fa-camera"></i> Face Capture Console</h2>
+            
+            {% if data %}
+            <div class="alert-box">
+                <i class="fa-solid fa-circle-info"></i> {{ data }}
+            </div>
+            {% endif %}
+
+            <div class="webcam-layout">
+                <!-- Camera Feed Box -->
+                <div class="webcam-card">
+                    <h3 style="font-family: var(--font-heading); margin-bottom: 15px; color: #fff; font-size: 1.1rem;">
+                        <i class="fa-solid fa-video"></i> Live Webcam Feed
+                    </h3>
+                    <div id="my_camera" class="camera-frame"></div>
+
+                    <button type="button" class="btn-primary" onclick="take_snapshot()" style="margin-top: 20px;">
+                        <i class="fa-solid fa-camera-retro"></i> Take Snapshot
+                    </button>
+
+                    <div id="sr" class="server-response">
+                        <i class="fa-solid fa-info-circle"></i> Camera Initialized. Click 'Take Snapshot'.
+                    </div>
+                </div>
+
+                <!-- Snapshot Preview Box -->
+                <div class="results-card">
+                    <div id="results">
+                        <i class="fa-solid fa-image" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 10px;"></i>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Your captured face image will appear here...</p>
+                    </div>
+
+                    <form name="f1" method="post" action="{% url 'saveUser' %}" style="width: 100%; margin-top: 20px;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-primary btn-secondary">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Save &amp; Generate QR Code
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer">
+        <p>&copy; Employee Attendance System | Biometric Enrollment</p>
+    </div>
+</div>
+
+<script>
+    Webcam.set({
+        width: 320,
+        height: 240,
+        image_format: 'jpeg',
+        jpeg_quality: 90
+    });
+    Webcam.attach('#my_camera');
+</script>
+</body>
+</html>

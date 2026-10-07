@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Employee Data - Employee Attendance System</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
+    <script>
+        function validate(formObj) {
+            if (!formObj.t1.value.trim()) {
+                alert("Please Enter Emp ID");
+                formObj.t1.focus();
+                return false;
+            }
+            if (!formObj.t2.value.trim()) {
+                alert("Please Enter Emp Name");
+                formObj.t2.focus();
+                return false;
+            }
+            if (!formObj.t3.value.trim()) {
+                alert("Please Enter Phone No");
+                formObj.t3.focus();
+                return false;
+            }
+            if (isNaN(formObj.t3.value)) {
+                alert("Contact No must be numeric");
+                formObj.t3.focus();
+                return false;
+            }
+            if (!formObj.t4.value.trim()) {
+                alert("Please Enter Employee Post");
+                formObj.t4.focus();
+                return false;
+            }
+            if (!formObj.t5.value.trim()) {
+                alert("Please Enter Employee Salary");
+                formObj.t5.focus();
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+<div id="wrapper">
+    <!-- Header -->
+    <div id="header">
+        <div id="logo">
+            <div id="logo-icon">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <div>
+                <h1>Employee Attendance System</h1>
+                <p>Register New Staff Member</p>
+            </div>
+        </div>
+        <div class="system-status">
+            <span class="pulse-dot"></span>
+            Admin Active
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div id="menu">
+        <ul>
+            <li><a href="{% url 'AddEmp' %}" class="active"><i class="fa-solid fa-user-plus"></i> Create Employee Data</a></li>
+            <li><a href="{% url 'ViewEmp' %}"><i class="fa-solid fa-users"></i> View Employee Data</a></li>
+            <li><a href="{% url 'ViewEmpAttendance' %}"><i class="fa-solid fa-calendar-check"></i> View Employee Attendance</a></li>
+            <li><a href="{% url 'index' %}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Panel -->
+    <div class="content-panel">
+        <div class="form-card" style="max-width: 600px;">
+            <h2><i class="fa-solid fa-id-card"></i> Create Employee Details</h2>
+
+            {% if data %}
+            <div class="alert-box">
+                <i class="fa-solid fa-circle-info"></i> {{ data|safe }}
+            </div>
+            {% endif %}
+
+            <form name="f1" method="post" action="{% url 'AddEmpAction' %}" onsubmit="return validate(this);">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="empid"><i class="fa-solid fa-hashtag"></i> New Employee ID</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-hashtag"></i>
+                        <input type="text" id="empid" name="t1" placeholder="e.g. EMP101" autocomplete="off" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="empname"><i class="fa-solid fa-user"></i> Employee Name</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="empname" name="t2" placeholder="Full Name" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone"><i class="fa-solid fa-phone"></i> Phone Number</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-phone"></i>
+                        <input type="text" id="phone" name="t3" placeholder="10-digit Phone Number" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="post"><i class="fa-solid fa-briefcase"></i> Employee Designation / Post</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <input type="text" id="post" name="t4" placeholder="e.g. Software Engineer" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="salary"><i class="fa-solid fa-money-bill-wave"></i> Monthly Salary ($)</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <input type="text" id="salary" name="t5" placeholder="e.g. 5000" />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fa-solid fa-arrow-right"></i> Next: Capture Face Data
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer">
+        <p>&copy; Employee Attendance System | Administrator Console</p>
+    </div>
+</div>
+</body>
+</html>

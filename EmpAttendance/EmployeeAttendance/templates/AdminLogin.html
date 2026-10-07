@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Administrator Login - Employee Attendance System</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
+    <script>
+        function validate(formObj) {
+            if (!formObj.t1.value.trim()) {
+                alert("Please enter Administrator Username");
+                formObj.t1.focus();
+                return false;
+            }
+            if (!formObj.t2.value.trim()) {
+                alert("Please enter Administrator Password");
+                formObj.t2.focus();
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+<div id="wrapper">
+    <!-- Header -->
+    <div id="header">
+        <div id="logo">
+            <div id="logo-icon">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <div>
+                <h1>Employee Attendance System</h1>
+                <p>Administrator Control Center</p>
+            </div>
+        </div>
+        <div class="system-status">
+            <span class="pulse-dot"></span>
+            System Online
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div id="menu">
+        <ul>
+            <li><a href="{% url 'index' %}"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="{% url 'AdminLogin' %}" class="active"><i class="fa-solid fa-user-gear"></i> Administrator Login</a></li>
+            <li><a href="{% url 'UserLogin' %}"><i class="fa-solid fa-id-card"></i> Employee Login</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Panel -->
+    <div class="content-panel">
+        <div class="form-card">
+            <h2><i class="fa-solid fa-lock"></i> Admin Authentication</h2>
+
+            {% if data %}
+            <div class="alert-box">
+                <i class="fa-solid fa-triangle-exclamation"></i> {{ data }}
+            </div>
+            {% endif %}
+
+            <form name="f1" method="post" action="{% url 'AdminLoginAction' %}" onsubmit="return validate(this);">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="admin-user"><i class="fa-solid fa-user"></i> Username</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="admin-user" name="t1" placeholder="Enter admin username" autocomplete="off" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="admin-pass"><i class="fa-solid fa-key"></i> Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-key"></i>
+                        <input type="password" id="admin-pass" name="t2" placeholder="Enter password" />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login to Console
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer">
+        <p>&copy; Employee Attendance System | Secure Admin Access</p>
+    </div>
+</div>
+</body>
+</html>
